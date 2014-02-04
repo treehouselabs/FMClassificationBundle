@@ -1,14 +1,19 @@
 {
-    "name": "fm/classification-bundle",
-    "require": {
-        "doctrine/doctrine-bundle": "~1.2",
-        "doctrine/orm": "~2.2,>=2.2.3",
-        "fieg/bayes": "*"
-    },
-    "authors": [
-        {
-            "name": "fieg",
-            "email": "jeroen@fieg.nl"
-        }
-    ]
+  "name": "fm/classification-bundle",
+  "require": {
+    "doctrine/doctrine-bundle": "~1.2",
+    "doctrine/orm": "~2.2,>=2.2.3",
+    "fieg/bayes": "*"
+  },
+  "authors": [
+    {
+      "name": "fieg",
+      "email": "jeroen@fieg.nl"
+    }
+  ],
+  "autoload": {
+    "psr-0": {
+      "FM": "src/"
+    }
+  }
 }
