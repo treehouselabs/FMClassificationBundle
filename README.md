@@ -11,7 +11,7 @@ Returns a single "label" with a certain score.
 
 ### Guesser
 
-Returns a list of values with scores (ScoredCollection).
+Returns a list of values with scores (WeightedCollection).
 
 ### DataSource
 
@@ -23,4 +23,4 @@ Normalizes an input.
 
 ### Tokenizer
 
-Splits an input in tokens.
+Splits a string in tokens.
