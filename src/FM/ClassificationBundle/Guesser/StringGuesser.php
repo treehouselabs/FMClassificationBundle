@@ -63,17 +63,13 @@ class StringGuesser implements GuesserInterface
                 $score = 0;
                 $maxScore = max(count($tokens), count($itemTokens));
 
-//                $p = 0;
-//                $l = levenshtein($value, $itemValue);
-//                similar_text($value, $itemValue, $p);
-//                var_dump($value, $itemValue, $l, $p);
                 foreach ($tokens as $token) {
                     if (strstr($itemValue, $token)) {
                         $score++;
                     }
                 }
 
-                $score  = $score / $maxScore;
+                $score  = $score / $maxScore; // normalize the score between 0 and 1
             }
 
             if ($score > 0) {
