@@ -4,17 +4,23 @@ namespace FM\ClassificationBundle\Collection;
 
 class WeightedCollection
 {
+    /**
+     * @var array[<mixed, float>]
+     */
     protected $collection = [];
 
     /**
-     * @param mixed $value
-     * @param integer $score
+     * @param  mixed                 $value
+     * @param  integer               $score
      * @throws \OutOfBoundsException
      */
     public function add($value, $score)
     {
         if ($score < 0 || $score > 1) {
-            throw new \OutOfBoundsException(sprintf('Score can only be between 0 and 1, %f give', $score));
+            throw new \OutOfBoundsException(sprintf(
+                'Score can only be between 0 and 1, %f give',
+                $score
+            ));
         }
 
         $this->collection[] = [$value, $score];
@@ -78,8 +84,8 @@ class WeightedCollection
     }
 
     /**
-     * @param WeightedCollection $collection
-     * @param int $weight
+     * @param  WeightedCollection $collection
+     * @param  int                $weight
      * @throws \LogicException
      */
     public function merge(WeightedCollection $collection, $weight = 1)
@@ -92,7 +98,10 @@ class WeightedCollection
             } else {
                 foreach ($this->collection as $key => list($existingValue, $existingScore)) {
                     if ($existingValue === $value) {
-                        $this->collection[$key] = [$existingValue, $existingScore + ($score * $weight)];
+                        $this->collection[$key] = [
+                            $existingValue,
+                            $existingScore + ($score * $weight)
+                        ];
                     }
                 }
             }
@@ -121,7 +130,7 @@ class WeightedCollection
         array_multisort($values, SORT_DESC, SORT_NUMERIC, $keys);
 
         $newCollection = [];
-        foreach($keys as $key) {
+        foreach ($keys as $key) {
             $newCollection[] = $this->collection[$key];
         }
 

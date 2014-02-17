@@ -42,7 +42,7 @@ class StringGuesser implements GuesserInterface
     }
 
     /**
-     * @param  mixed            $value
+     * @param  mixed              $value
      * @return WeightedCollection
      */
     public function guess($value)

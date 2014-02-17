@@ -13,7 +13,7 @@ class ChainGuesser implements GuesserInterface
 
     /**
      * @param GuesserInterface $guesser
-     * @param int $boost
+     * @param int              $boost
      * @return $this
      */
     public function addGuesser(GuesserInterface $guesser, $boost = 1)
@@ -24,7 +24,7 @@ class ChainGuesser implements GuesserInterface
     }
 
     /**
-     * @param mixed $value
+     * @param  mixed              $value
      * @return WeightedCollection
      */
     public function guess($value)

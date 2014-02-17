@@ -8,23 +8,32 @@ use FM\ClassificationBundle\Normalizer\NormalizerInterface;
 
 class EqualsGuesser implements GuesserInterface
 {
-    protected $tokenizer;
-
+    /**
+     * @var \FM\ClassificationBundle\Normalizer\NormalizerInterface
+     */
     protected $normalizer;
 
+    /**
+     * @var \FM\ClassificationBundle\DataSource\DataSourceInterface
+     */
     protected $dataSource;
 
+    /**
+     * Constructor.
+     *
+     * @param NormalizerInterface $normalizer
+     * @param DataSourceInterface $dataSource
+     */
     public function __construct(
         NormalizerInterface $normalizer,
         DataSourceInterface $dataSource
-    )
-    {
+    ) {
         $this->normalizer = $normalizer;
         $this->dataSource = $dataSource;
     }
 
     /**
-     * @param  mixed            $value
+     * @param  mixed              $value
      * @return WeightedCollection
      */
     public function guess($value)

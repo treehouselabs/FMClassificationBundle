@@ -2,7 +2,6 @@
 
 namespace FM\ClassificationBundle\Normalizer;
 
-
 class StopWordsNormalizer implements NormalizerInterface
 {
     /**
