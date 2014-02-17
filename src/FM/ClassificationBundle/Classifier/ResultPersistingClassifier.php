@@ -31,8 +31,8 @@ class ResultPersistingClassifier implements TrainableClassifierInterface
      * Constructor.
      *
      * @param ClassifierInterface $classifier
-     * @param Doctrine $doctrine
-     * @param string $classifierName discriminator to store results of multiple classifiers
+     * @param Doctrine            $doctrine
+     * @param string              $classifierName discriminator to store results of multiple classifiers
      */
     public function __construct(ClassifierInterface $classifier, Doctrine $doctrine, $classifierName)
     {

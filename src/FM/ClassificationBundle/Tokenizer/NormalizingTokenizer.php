@@ -7,7 +7,7 @@ use FM\ClassificationBundle\Normalizer\NormalizerInterface;
 /**
  * Applies a Normalizer onto a Tokenizer
  */
-class NormalizerTokenizer implements TokenizerInterface
+class NormalizingTokenizer implements TokenizerInterface
 {
     protected $tokenizer;
     protected $normalizer;

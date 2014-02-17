@@ -29,10 +29,11 @@ class TokenCompareClassifier implements ClassifierInterface
      * Constructor.
      *
      * @param DataSourceInterface $dataSource
-     * @param TokenizerInterface $tokenizer
+     * @param TokenizerInterface  $tokenizer
      * @param NormalizerInterface $normalizer
      */
-    public function __construct(DataSourceInterface $dataSource, TokenizerInterface $tokenizer, NormalizerInterface $normalizer)
+    public function __construct(DataSourceInterface $dataSource, TokenizerInterface $tokenizer,
+        NormalizerInterface $normalizer)
     {
         $this->dataSource = $dataSource;
         $this->tokenizer = $tokenizer;
@@ -107,9 +108,9 @@ class TokenCompareClassifier implements ClassifierInterface
     }
 
     /**
-     * @param array $array
+     * @param array      $array
      * @param string|int $column
-     * @param int $order SORT_ASC or SORT_DESC
+     * @param int        $order  SORT_ASC or SORT_DESC
      */
     protected function sort(array &$array, $column, $order = SORT_ASC)
     {
