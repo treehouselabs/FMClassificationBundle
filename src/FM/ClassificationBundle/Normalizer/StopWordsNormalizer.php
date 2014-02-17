@@ -2,30 +2,35 @@
 
 namespace FM\ClassificationBundle\Normalizer;
 
+
 class StopWordsNormalizer implements NormalizerInterface
 {
+    /**
+     * @var string[]
+     */
     protected $stopWords;
-    protected $punctuation;
 
     /**
      * Constructor.
      *
-     * @param array $stopWords
-     * @param string $punctuation
+     * @param string[] $stopWords
      */
-    public function __construct(array $stopWords, $punctuation = '$^\s\t\n\.,\?!_-')
+    public function __construct(array $stopWords)
     {
         $this->stopWords = $stopWords;
-        $this->punctuation = $punctuation;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function normalize($value)
     {
+        if (null === $value) {
+            return null;
+        }
+
         foreach ($this->stopWords as $word) {
-            //preg_replace('(?:' . $this->punctuation . ')(' . $word . ')(?:' . $this->punctuation . ')', '', $value);
-
-
-            $value = str_replace($word, '', $value);
+            $value = str_ireplace($word, '', $value);
         }
 
         return $value;

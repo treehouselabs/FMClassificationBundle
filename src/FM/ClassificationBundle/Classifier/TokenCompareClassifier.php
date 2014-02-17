@@ -32,7 +32,8 @@ class TokenCompareClassifier implements ClassifierInterface
      * @param TokenizerInterface $tokenizer
      * @param NormalizerInterface $normalizer
      */
-    public function __construct(DataSourceInterface $dataSource, TokenizerInterface $tokenizer, NormalizerInterface $normalizer)
+    public function __construct(DataSourceInterface $dataSource, TokenizerInterface $tokenizer,
+        NormalizerInterface $normalizer)
     {
         $this->dataSource = $dataSource;
         $this->tokenizer = $tokenizer;
