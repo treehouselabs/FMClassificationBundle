@@ -2,13 +2,13 @@
 
 namespace FM\ClassificationBundle\Tests\Extractor;
 
-use FM\CascoBundle\Tests\TestCase;
 use FM\ClassificationBundle\Extractor\ExtractorInterface;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * @group functional
  */
-abstract class ExtractorTest extends TestCase
+abstract class ExtractorTest extends WebTestCase
 {
     /**
      * Tests that extracting a given text results in a given resulting value
