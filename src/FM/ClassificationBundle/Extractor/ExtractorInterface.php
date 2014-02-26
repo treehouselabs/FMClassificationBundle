@@ -7,8 +7,8 @@ interface ExtractorInterface
     /**
      * Extracts a specific value from a given text
      *
-     * @param $sourceText
+     * @param $text
      * @return mixed
      */
-    public function extract($sourceText);
+    public function extract($text);
 }
