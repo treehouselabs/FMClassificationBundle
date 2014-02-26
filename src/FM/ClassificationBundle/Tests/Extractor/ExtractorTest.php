@@ -21,9 +21,9 @@ abstract class ExtractorTest extends WebTestCase
             $sourceText = $dataSet[0];
             $expectedValue = $dataSet[1];
 
-            $extractedValue = $extractor->extract($sourceText);
+            $actualValue = $extractor->extract($sourceText);
 
-            $this->assertEquals($expectedValue, $extractedValue, "The ACTUAL extracted value and the EXPECTED extracted value do not match");
+            $this->assertEquals($expectedValue, $actualValue, sprintf("The ACTUAL extracted value and the EXPECTED extracted value do not match (using extractor: %s)", get_class($extractor)));
         }
     }
 

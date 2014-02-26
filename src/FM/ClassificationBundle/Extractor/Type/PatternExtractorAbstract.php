@@ -16,7 +16,10 @@ abstract class PatternExtractorAbstract implements ExtractorInterface
                 throw new \InvalidArgumentException("Patterns returned by an extractor should be objects implementing FM\\ClassificationBundle\\Extractor\\Type\\PatternInterface");
             }
 
-            $patternObject->match($sourceText);
+            $match = $patternObject->match($sourceText);
+            if ($match !== null) {
+                return $match;
+            }
         }
 
         return null;
