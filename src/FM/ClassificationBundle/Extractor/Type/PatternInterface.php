@@ -19,4 +19,10 @@ interface PatternInterface
      * @return mixed
      */
     public function getAssignedValue();
+
+    /**
+     * @param $value
+     * @return mixed
+     */
+    public function match($value);
 }

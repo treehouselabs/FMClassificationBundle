@@ -15,15 +15,15 @@ abstract class ExtractorTest extends WebTestCase
      */
     public function testExtraction()
     {
-        $matcher = $this->getExtractor();
+        $extractor = $this->getExtractor();
 
         foreach ($this->getTestData() as $dataSet) {
             $sourceText = $dataSet[0];
             $expectedValue = $dataSet[1];
 
-            $extractedValue = $matcher->extract($sourceText);
+            $extractedValue = $extractor->extract($sourceText);
 
-            $this->assertEquals($expectedValue, $extractedValue, "The expected extracted value and actual extracted value do not match");
+            $this->assertEquals($expectedValue, $extractedValue, "The ACTUAL extracted value and the EXPECTED extracted value do not match");
         }
     }
 

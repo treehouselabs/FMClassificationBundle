@@ -43,4 +43,20 @@ abstract class PatternAbstract implements PatternInterface
     {
         return $this->assignedValue;
     }
+
+    /**
+     * @param $extractedValue
+     * @param $sourceText
+     * @return mixed
+     */
+    protected function determineReturnValue($extractedValue, $sourceText)
+    {
+        if (is_callable($this->getAssignedValue())) {
+            // a callable is assigned to this match, execute it and return it's value
+            return call_user_func_array($this->getAssignedValue(), [$extractedValue, $sourceText]);
+        }
+
+        // just return the extracted value
+        return $extractedValue;
+    }
 }
