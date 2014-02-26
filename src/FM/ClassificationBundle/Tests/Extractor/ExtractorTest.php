@@ -11,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 abstract class ExtractorTest extends WebTestCase
 {
     /**
-     * Tests that extracting a given text results in a given resulting value
+     * Tests that extracting a given text results in a given value
      */
     public function testExtraction()
     {
@@ -28,11 +28,27 @@ abstract class ExtractorTest extends WebTestCase
     }
 
     /**
+     * Returns the extractor belonging to the current test
+     * It is used to extract from the testing data
+     *
      * @return ExtractorInterface
      */
     abstract protected function getExtractor();
 
     /**
+     * Returns (positive) testing data in the following format:
+     *
+     * [
+     *   [
+     *     'this is the first source text',
+     *     'this is the first (expected) extracted value'
+     *   ],
+     *   [
+     *     'this is the second source text',
+     *     'this is the second (expected) extracted value'
+     *   ]
+     * ]
+     *
      * @return array
      */
     abstract protected function getTestData();
