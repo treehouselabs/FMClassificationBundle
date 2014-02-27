@@ -17,7 +17,7 @@ class NormalizingExtractor implements ExtractorInterface
     protected $normalizer;
 
     /**
-     * @param ExtractorInterface $extractor
+     * @param ExtractorInterface  $extractor
      * @param NormalizerInterface $normalizer
      */
     public function __construct(ExtractorInterface $extractor, NormalizerInterface $normalizer)
@@ -34,6 +34,7 @@ class NormalizingExtractor implements ExtractorInterface
         $extracted = $this->extractor->extract($text);
         if ($extracted !== null) {
             $normalized = $this->normalizer->normalize($extracted);
+
             return $normalized;
         }
 

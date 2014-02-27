@@ -5,11 +5,6 @@ namespace FM\ClassificationBundle\Extractor;
 class CallbackExtractor implements ExtractorInterface
 {
     /**
-     * @var ExtractorInterface
-     */
-    protected $extractor;
-
-    /**
      * @var callable
      */
     protected $callable;
@@ -27,6 +22,6 @@ class CallbackExtractor implements ExtractorInterface
      */
     public function extract($text)
     {
-        return call_user_func_array($this->callable, array($text));
+        return call_user_func_array($this->callable, array($text, null, $this));
     }
 }

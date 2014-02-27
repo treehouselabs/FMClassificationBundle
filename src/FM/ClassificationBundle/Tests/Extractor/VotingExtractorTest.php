@@ -2,69 +2,41 @@
 
 namespace FM\ClassificationBundle\Tests\Extractor\Type;
 
-use FM\ClassificationBundle\Extractor\PatternExtractor;
 use FM\ClassificationBundle\Extractor\VotingExtractor;
 
 class VotingExtractorTest extends \PHPUnit_Framework_TestCase
 {
-    const FAKE_CONSTANT = 'THIS_IS_FAKE';
-
-    /**
-     * @dataProvider getTestData
-     */
-    public function testExtract($input, $expected)
+    public function testExtract()
     {
-        $extractor = new VotingExtractor($input['extractors'], $input['voter']);
-        $actual = $extractor->extract($input['text']);
+        $expectedInput = 'foobar';
+        $expectedExtracted = 'bar';
+        $expectedVote = true;
 
-        $this->assertEquals($expected, $actual);
-    }
+        $extractorMock = $this->getMockForAbstractClass('FM\ClassificationBundle\Extractor\ExtractorInterface');
 
-    public function getTestData()
-    {
-        return [
-            [
-                [
-                    'extractors' => [
-                        new PatternExtractor('#\bapple\b#'),
-                        new PatternExtractor('#\bpear\b#'),
-                        new PatternExtractor('#\strawberry\b#'),
-                    ],
-                    'text'    => 'The apple does not fall far from the tree',
-                    'voter' => function ($extractedValue) {
-                        return $extractedValue;
-                    }
-                ],
-                ['apple'],
-            ],
-            [
-                [
-                    'extractors' => [
-                        new PatternExtractor('#\bapple\b#'),
-                        new PatternExtractor('#\bpear\b#'),
-                        new PatternExtractor('#\strawberry\b#'),
-                    ],
-                    'text'       => 'The apple does not fall far from the tree',
-                    'voter' => function ($extractedValue) {
-                        return self::FAKE_CONSTANT;
-                    }
-                ],
-                self::FAKE_CONSTANT,
-            ],
-            [
-                [
-                    'extractors' => [
-                        new PatternExtractor('#\bapple\b#'),
-                        new PatternExtractor('#\bpear\b#'),
-                        new PatternExtractor('#\strawberry\b#'),
-                    ],
-                    'text'       => 'The tomato does not fall far from the tree',
-                    'voter' => function ($extractedValue, $text) {
-                        return self::FAKE_CONSTANT;
-                    }
-                ],
-                null,
-            ],
-        ];
+        $extractorMock->expects($this->once())
+            ->method('extract')
+            ->with($expectedInput)
+            ->will($this->returnValue($expectedExtracted));
+
+        $testCase = $this;
+
+        $isCalled = 0;
+
+        $voter = function ($input, $extracted, $extractor) use ($testCase, $expectedInput, $extractorMock, &$isCalled, $expectedExtracted, $expectedVote) {
+            $isCalled++;
+
+            $testCase->assertEquals($expectedInput, $input);
+            $testCase->assertEquals($expectedExtracted, $extracted);
+            $testCase->assertSame($extractorMock, $extractor);
+
+            return $expectedVote;
+        };
+
+        $extractor = new VotingExtractor([$extractorMock], $voter);
+        $actual = $extractor->extract($expectedInput);
+
+        $this->assertEquals(1, $isCalled);
+        $this->assertEquals($expectedExtracted, $actual);
     }
 }
