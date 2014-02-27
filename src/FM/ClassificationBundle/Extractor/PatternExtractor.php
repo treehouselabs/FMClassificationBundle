@@ -22,10 +22,13 @@ class PatternExtractor implements ExtractorInterface
      */
     public function extract($text)
     {
-        $matches = [];
         $numberOfMatches = preg_match_all($this->pattern, $text, $matches);
-        if ($numberOfMatches > 0 && array_key_exists(1, $matches)) {
-            return $matches[1];
+        if ($numberOfMatches > 0) {
+            if (array_key_exists(1, $matches)) {
+                return $matches[1];
+            } else {
+                throw new \Exception("You must use wildcards in your pattern to have something extracted");
+            }
         }
 
         return null;

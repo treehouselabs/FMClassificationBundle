@@ -4,10 +4,12 @@ namespace FM\ClassificationBundle\Normalizer;
 
 class BooleanNormalizer implements NormalizerInterface
 {
-    protected $trueValues;
+    protected $nonEmptyStringsAsTrue = false;
+    protected $trueValues = [];
 
-    public function __construct(array $trueValues = ['y', 'yes'])
+    public function __construct($nonEmptyStringsAsTrue = false, array $trueValues = ['y', 'yes'])
     {
+        $this->nonEmptyStringsAsTrue = $nonEmptyStringsAsTrue;
         $this->trueValues = $trueValues;
     }
 
@@ -30,6 +32,9 @@ class BooleanNormalizer implements NormalizerInterface
         }
 
         if (is_string($value)) {
+            if ($this->nonEmptyStringsAsTrue === true && $value != '') {
+                return true;
+            }
             foreach ($this->trueValues as $trueValue) {
                 if (strcasecmp($value, $trueValue) == 0) {
                     return true;

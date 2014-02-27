@@ -16,7 +16,7 @@ class VotingExtractor implements ExtractorInterface
 
     /**
      * @param ExtractorInterface[] $extractors
-     * @param callable|null        $callable
+     * @param callable             $callable
      */
     public function __construct(array $extractors, \Closure $callable)
     {
@@ -33,8 +33,6 @@ class VotingExtractor implements ExtractorInterface
             $extracted = $extractor->extract($text);
             if ($extracted !== null) {
                 if (false !== $result = call_user_func_array($this->callable, array($text, &$extracted, $extractor))) {
-                    var_dump($extracted);
-
                     return $extracted;
                 }
             }
