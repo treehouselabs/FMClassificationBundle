@@ -3,42 +3,26 @@
 namespace FM\ClassificationBundle\Tests\Extractor\Type;
 
 use FM\ClassificationBundle\Extractor\NormalizingExtractor;
-use FM\ClassificationBundle\Extractor\PatternExtractor;
-use FM\ClassificationBundle\Normalizer\ArrayToStringNormalizer;
+use FM\ClassificationBundle\Normalizer\LowercaseNormalizer;
 
 class NormalizingExtractorTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @inheritdoc
-     * @dataProvider getTestData
-     */
-    public function testExtract($input, $expected)
+    public function testExtract()
     {
-        $extractor = new NormalizingExtractor($input['extractor'], $input['normalizer']);
-        $actual    = $extractor->extract($input['text']);
+        $expectedInput = 'foobar';
+        $returnValue = 'UPPERCASED';
+        $expectedExtracted = 'uppercased';
 
-        $this->assertEquals($expected, $actual);
-    }
+        $normalizerMock = new LowercaseNormalizer();
+        $extractorMock = $this->getMockForAbstractClass('FM\ClassificationBundle\Extractor\ExtractorInterface');
+        $extractorMock->expects($this->once())
+            ->method('extract')
+            ->with($expectedInput)
+            ->will($this->returnValue($returnValue));
 
-    public function getTestData()
-    {
-        return [
-            [
-                [
-                    'text'    => 'One foo for man, one giant foo for mankind\b#',
-                    'extractor' => new PatternExtractor('#\bfoo\b#'),
-                    'normalizer' => new ArrayToStringNormalizer()
-                ],
-                'foo',
-            ],
-            [
-                [
-                    'text'       => 'One foo for man, one giant foo for mankind\b#',
-                    'extractor'  => new PatternExtractor('#\bfoobar\b#'),
-                    'normalizer' => new ArrayToStringNormalizer()
-                ],
-                null,
-            ],
-        ];
+        $extractor = new NormalizingExtractor($extractorMock, $normalizerMock);
+        $actual    = $extractor->extract($expectedInput);
+
+        $this->assertEquals($expectedExtracted, $actual);
     }
 }
