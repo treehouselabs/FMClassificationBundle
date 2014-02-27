@@ -21,18 +21,9 @@ class ArrayToStringNormalizerTest extends \PHPUnit_Framework_TestCase
     public function normalizeDataProvider()
     {
         return [
-            [
-                [
-                    1,
-                    2,
-                    3
-                ],
-                1
-            ],
-            [
-                new \stdClass(),
-                null
-            ],
+            [[1, 2, 3], '123'], // array normalizing
+            [[[1], [2], 3 => 3], '123'], // normalizing combination of arrays and scalars
+            [new \stdClass(), null], // not an array or string
         ];
     }
 }
