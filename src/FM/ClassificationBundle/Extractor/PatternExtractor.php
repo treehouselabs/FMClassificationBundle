@@ -24,12 +24,8 @@ class PatternExtractor implements ExtractorInterface
     {
         $matches = [];
         $numberOfMatches = preg_match_all($this->pattern, $text, $matches);
-        if ($numberOfMatches > 0) {
-            if (array_key_exists(1, $matches)) {
-                return $matches[1];
-            }
-
-            return $matches[0];
+        if ($numberOfMatches > 0 && array_key_exists(1, $matches)) {
+            return $matches[1];
         }
 
         return null;

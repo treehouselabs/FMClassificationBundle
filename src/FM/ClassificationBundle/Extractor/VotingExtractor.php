@@ -32,7 +32,9 @@ class VotingExtractor implements ExtractorInterface
         foreach ($this->extractors as $extractor) {
             $extracted = $extractor->extract($text);
             if ($extracted !== null) {
-                if (false !== $result = call_user_func_array($this->callable, array($text, $extracted, $extractor))) {
+                if (false !== $result = call_user_func_array($this->callable, array($text, &$extracted, $extractor))) {
+                    var_dump($extracted);
+
                     return $extracted;
                 }
             }
