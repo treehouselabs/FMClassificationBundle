@@ -2,7 +2,7 @@
 
 namespace FM\ClassificationBundle\Extractor;
 
-class ChainExtractor implements ExtractorInterface
+class FirstMatchExtractor implements ExtractorInterface
 {
     /**
      * @var ExtractorInterface[]
