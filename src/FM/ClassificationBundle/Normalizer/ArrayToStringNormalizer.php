@@ -4,11 +4,23 @@ namespace FM\ClassificationBundle\Normalizer;
 
 class ArrayToStringNormalizer implements NormalizerInterface
 {
+    /**
+     * @var string
+     */
+    protected $glue;
+
+    /**
+     * @param string $glue
+     */
     public function __construct($glue = '')
     {
         $this->glue = $glue;
     }
 
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function normalize($value)
     {
         if (is_null($value)) {
@@ -26,6 +38,11 @@ class ArrayToStringNormalizer implements NormalizerInterface
         return null;
     }
 
+    /**
+     * @param  array                 $array
+     * @return string
+     * @throws \OutOfBoundsException
+     */
     protected function implodeRecursively(array $array)
     {
         $imploded = '';
