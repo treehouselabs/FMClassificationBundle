@@ -6,39 +6,30 @@ use FM\ClassificationBundle\Normalizer\CallbackNormalizer;
 
 class CallbackNormalizerTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @dataProvider normalizeDataProvider
-     */
-    public function testNormalize($value, $expected)
+    public function testNormalize()
     {
-        $normalizer = new CallbackNormalizer($value);
+        $originalInput = 'FOOBAR';
+        $expectedNormalization = 'foobar';
+        $isCalled = 0;
+        $testCase = $this;
 
-        $result = $normalizer->normalize($value);
+        $callback = function ($input) use (
+            &$isCalled,
+            $testCase,
+            $originalInput,
+            $expectedNormalization
+        ) {
+            $isCalled++;
 
-        $this->assertEquals($expected, $result);
-    }
+            $testCase->assertEquals($input, $originalInput);
 
-    public function normalizeDataProvider()
-    {
-        return [
-            [
-                function ($value) {
-                    return 'foobar';
-                },
-                'foobar',
-            ],
-            [
-                function ($value) {
-                    return 123;
-                },
-                123,
-            ],
-            [
-                function ($value) {
-                    return null;
-                },
-                null,
-            ],
-        ];
+            return $expectedNormalization;
+        };
+
+        $normalizer = new CallbackNormalizer($callback);
+        $actual    = $normalizer->normalize($originalInput);
+
+        $this->assertEquals($expectedNormalization, $actual);
+        $this->assertEquals(1, $isCalled);
     }
 }
