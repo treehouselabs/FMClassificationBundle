@@ -2,9 +2,9 @@
 
 namespace FM\ClassificationBundle\Tests\Extractor\Type;
 
-use FM\ClassificationBundle\Extractor\ChainExtractor;
+use FM\ClassificationBundle\Extractor\FirstMatchExtractor;
 
-class ChainExtractorTest extends \PHPUnit_Framework_TestCase
+class FirstMatchExtractorTest extends \PHPUnit_Framework_TestCase
 {
     public function testExtract()
     {
@@ -17,7 +17,7 @@ class ChainExtractorTest extends \PHPUnit_Framework_TestCase
             ->with($expectedInput)
             ->will($this->returnValue($expectedExtracted));
 
-        $extractor = new ChainExtractor([$extractorMock]);
+        $extractor = new FirstMatchExtractor([$extractorMock]);
         $actual = $extractor->extract($expectedInput);
 
         $this->assertEquals($expectedExtracted, $actual);

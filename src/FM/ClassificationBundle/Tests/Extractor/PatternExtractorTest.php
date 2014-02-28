@@ -23,7 +23,7 @@ class PatternExtractorTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 'One foo for man, one giant foo for mankind',
-                '#\bfoo\b#',
+                '#(\bfoo\b)#',
                 [
                     'foo',
                     'foo'
@@ -31,7 +31,7 @@ class PatternExtractorTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'The apple does not fall far from the tree',
-                '#\bapple\b#',
+                '#(\bapple\b)#',
                 [
                     'apple',
                 ],
