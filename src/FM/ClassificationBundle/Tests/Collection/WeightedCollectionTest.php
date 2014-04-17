@@ -109,7 +109,7 @@ class ScoredCollectionTest extends \PHPUnit_Framework_TestCase
 
         $collection2 = new WeightedCollection();
         $collection2->add($object3, 0.6); // added to 0.1
-        $collection2->add($object4, 0.6); // added to 0.1
+        $collection2->add($object4, 0.6);
 
         $collection1->merge($collection2);
 
@@ -121,6 +121,29 @@ class ScoredCollectionTest extends \PHPUnit_Framework_TestCase
                 [$object2, 0.5],
             ],
             $collection1->raw()
+        );
+    }
+
+    public function testMap()
+    {
+        $object1 = (object) ['name' => 'object1'];
+        $object2 = (object) ['name' => 'object2'];
+        $object3 = (object) ['name' => 'object3'];
+
+        $collection1 = new WeightedCollection();
+
+        $collection1->add($object1, 1);
+        $collection1->add($object2, 0.5);
+        $collection1->add($object3, 0.1);
+
+        $collection1->map(function ($value) { return strtoupper($value->name); });
+
+        $this->assertEquals([
+                'OBJECT1',
+                'OBJECT2',
+                'OBJECT3',
+            ],
+            $collection1->all()
         );
     }
 }

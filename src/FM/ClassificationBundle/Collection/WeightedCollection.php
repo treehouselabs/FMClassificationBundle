@@ -109,6 +109,16 @@ class WeightedCollection
     }
 
     /**
+     * @param $mapperCallback callback that gets applied to every value in the collection
+     */
+    public function map($mapperCallback)
+    {
+        foreach ($this->collection as $key => list($existingValue, $existingScore)) {
+            $this->collection[$key] = [$mapperCallback($existingValue), $existingScore];
+        }
+    }
+
+    /**
      * @return int
      */
     public function count()

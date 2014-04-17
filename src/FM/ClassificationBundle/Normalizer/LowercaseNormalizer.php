@@ -11,7 +11,7 @@ class LowercaseNormalizer implements NormalizerInterface
         }
 
         if (!is_string($value)) {
-            throw new \InvalidArgumentException(sprintf('Expected string, got "%s": %s', gettype($value), var_export($value, true)));
+            throw new \InvalidArgumentException(sprintf('Expected string, got "%s": %s', gettype($value), is_scalar($value) ? var_export($value, true) : get_class($value)));
         }
 
         return strtolower($value);

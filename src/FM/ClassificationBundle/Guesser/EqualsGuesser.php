@@ -8,6 +8,7 @@ use FM\ClassificationBundle\Normalizer\NormalizerInterface;
 
 class EqualsGuesser implements GuesserInterface
 {
+    protected $dataSourceNormalizer;
     /**
      * @var \FM\ClassificationBundle\Normalizer\NormalizerInterface
      */
@@ -23,12 +24,15 @@ class EqualsGuesser implements GuesserInterface
      *
      * @param NormalizerInterface $normalizer
      * @param DataSourceInterface $dataSource
+     * @param \FM\ClassificationBundle\Normalizer\NormalizerInterface $dataSourceNormalizer
      */
     public function __construct(
         NormalizerInterface $normalizer,
-        DataSourceInterface $dataSource
+        DataSourceInterface $dataSource,
+        NormalizerInterface $dataSourceNormalizer = null
     ) {
         $this->normalizer = $normalizer;
+        $this->dataSourceNormalizer = $dataSourceNormalizer;
         $this->dataSource = $dataSource;
     }
 
@@ -47,7 +51,13 @@ class EqualsGuesser implements GuesserInterface
         }
 
         foreach ($this->dataSource as $item) {
-            $string = $this->normalizer->normalize($item);
+            $normalizedItem = $item;
+
+            if ($this->dataSourceNormalizer) {
+                $normalizedItem = $this->dataSourceNormalizer->normalize($item);
+            }
+
+            $string = $this->normalizer->normalize($normalizedItem);
 
             if ($string === $value) {
                 $retval->add($item, 1);

@@ -124,6 +124,10 @@ class MappedDataSource implements DataSourceInterface
      */
     public function rewind()
     {
+        if (!$this->cacheComplete) {
+            $this->cache = [];
+        }
+
         $this->dataSource->rewind();
     }
 

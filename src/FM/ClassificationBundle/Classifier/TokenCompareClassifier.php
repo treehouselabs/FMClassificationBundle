@@ -3,12 +3,18 @@
 namespace FM\ClassificationBundle\Classifier;
 
 use FM\ClassificationBundle\DataSource\DataSourceInterface;
+use FM\ClassificationBundle\DataSource\MappedDataSource;
 use FM\ClassificationBundle\Normalizer\NormalizerInterface;
 use Fieg\Bayes\TokenizerInterface;
 
 class TokenCompareClassifier implements ClassifierInterface
 {
     const EXACT_MATCH = 'exact';
+
+    /**
+     * @var \FM\ClassificationBundle\DataSource\DataSourceInterface
+     */
+    protected $mappedDataSource;
 
     /**
      * @var \FM\ClassificationBundle\DataSource\DataSourceInterface
@@ -38,6 +44,13 @@ class TokenCompareClassifier implements ClassifierInterface
         $this->dataSource = $dataSource;
         $this->tokenizer = $tokenizer;
         $this->normalizer = $normalizer;
+
+        $this->mappedDataSource = new MappedDataSource($this->dataSource, function($string) {
+            $normalizedString = $this->normalizer->normalize($string);
+            $_tokens = $this->tokenizer->tokenize($normalizedString);
+
+            return [$string, $_tokens];
+        });
     }
 
     /**
@@ -51,9 +64,10 @@ class TokenCompareClassifier implements ClassifierInterface
         $scoredList = array();
         $maxScore = count($tokens);
 
-        foreach ($this->dataSource as $string) {
-            $normalizedString = $this->normalizer->normalize($string);
-            $_tokens = $this->tokenizer->tokenize($normalizedString);
+        foreach ($this->mappedDataSource as list($string, $_tokens)) {
+            if (!$string) {
+                continue;
+            }
 
             $score = 0;
 
@@ -68,10 +82,12 @@ class TokenCompareClassifier implements ClassifierInterface
                 }
             }
 
-            $scoredList[] = array(
-                'score' => $score,
-                'string' => $string,
-            );
+            if ($score > 0) {
+                $scoredList[] = array(
+                    'score' => $score,
+                    'string' => $string,
+                );
+            }
         }
 
         $this->normalizeScores($scoredList, $maxScore);
