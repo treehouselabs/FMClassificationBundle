@@ -30,9 +30,7 @@ class BayesClassifier implements TrainableClassifierInterface
             $key = reset($keys);
             $confidence = $result[$key];
 
-            if ($confidence > 0.91) {
-                return $key;
-            }
+            return $key;
         }
 
         return null;

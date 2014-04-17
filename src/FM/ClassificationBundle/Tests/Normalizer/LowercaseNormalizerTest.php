@@ -23,6 +23,17 @@ class LowercaseNormalizerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testNormalizeThrowsInvalidArgumentException()
+    {
+        $normalizer = new LowercaseNormalizer();
+        $result = $normalizer->normalize((object) ['name' => 'blaat']);
+
+        $this->assertEquals(null, $result);
+    }
+
+    /**
      * @dataProvider normalizeDataProvider
      */
     public function testNormalize($value, $expected)

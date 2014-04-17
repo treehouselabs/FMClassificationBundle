@@ -80,13 +80,18 @@ class ResultPersistingClassifier implements TrainableClassifierInterface
      * @param $output
      * @param $confidence
      */
-    protected function persistResult($input, $output, $confidence)
+    protected function persistResult($input, $output, $confidence, $expected = null)
     {
+        if (null === $this->doctrine) {
+            return;
+        }
+
         $classifyResult = new ClassifyResult();
         $classifyResult->setInput($input);
         $classifyResult->setOutput($output);
         $classifyResult->setScore(round($confidence, 3));
         $classifyResult->setClassifier($this->classifierName);
+        $classifyResult->setExpected($expected);
 
         // if we have an existing record, update it's score, otherwise insert
         if ($existingClassifyResult = $this->doctrine->getRepository('FMClassificationBundle:ClassifyResult')->findOneByHash($classifyResult->getHash())) {
@@ -112,12 +117,16 @@ class ResultPersistingClassifier implements TrainableClassifierInterface
             ->where('cr.input LIKE :input')
             ->andWhere('cr.classifier = :classifier')
             ->setParameter(':input', '%'.json_encode($input).'%')
-            ->setParameter(':classifier', 'function_title')
+            ->setParameter(':classifier', $this->getClassifierName())
             ->getQuery()
             ->getResult();
 
-        foreach ($classifyResults as $classifyResult) {
-            $classifyResult->setExpected($expected);
+        if (count($classifyResults) > 0) {
+            foreach ($classifyResults as $classifyResult) {
+                $classifyResult->setExpected($expected);
+            }
+        } else {
+            $this->persistResult($input, null, null, $expected);
         }
 
         $this->doctrine->getManager()->flush();
