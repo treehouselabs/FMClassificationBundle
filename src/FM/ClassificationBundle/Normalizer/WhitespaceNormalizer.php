@@ -10,7 +10,9 @@ class WhitespaceNormalizer implements NormalizerInterface
             return null;
         }
 
-        $value = str_replace("\xC2\xA0", " ", $value); // Normalizes the unicode character which in html-entities is known as '&nbsp;'
+        // Normalizes the unicode character which in html-entities is known as '&nbsp;'
+        $value = str_replace("\xC2\xA0", " ", $value);
+        $value = str_replace("&nbsp;", " ", $value);
 
         $value = preg_replace('/\s+/', ' ', $value);
         $value = trim($value);
