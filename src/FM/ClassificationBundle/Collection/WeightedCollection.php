@@ -18,12 +18,29 @@ class WeightedCollection
     {
         if ($score < 0 || $score > 1) {
             throw new \OutOfBoundsException(sprintf(
-                'Score can only be between 0 and 1, %f give',
+                'Score can only be between 0 and 1, %f given',
                 $score
             ));
         }
 
         $this->collection[] = [$value, $score];
+    }
+
+    /**
+     * Returns score for value, returns 0 when value isn't found
+     *
+     * @param mixed $value
+     * @return float
+     */
+    public function getScore($value)
+    {
+        foreach ($this->collection as $key => list($existingValue, $existingScore)) {
+            if ($existingValue === $value) {
+                return $existingScore;
+            }
+        }
+
+        return 0;
     }
 
     /**
@@ -92,18 +109,61 @@ class WeightedCollection
     {
         $all = $this->all();
 
+        $max = 0;
+        foreach ($collection->raw() as list($value, $score)) {
+            if ($score > $max) {
+                $max = $score;
+            }
+        }
+
+        foreach ($this->collection as list($value, $score)) {
+            if ($score > $max) {
+                $max = $score;
+            }
+        }
+
+        $originalCollection = clone $this;
+
         foreach ($collection->raw() as list($value, $score)) {
             if (!in_array($value, $all, true)) {
                 $this->add($value, ($score * $weight));
             } else {
                 foreach ($this->collection as $key => list($existingValue, $existingScore)) {
                     if ($existingValue === $value) {
+                        $newScore = $existingScore + ($score * $weight);
+
                         $this->collection[$key] = [
                             $existingValue,
-                            $existingScore + ($score * $weight)
+                            $newScore
                         ];
                     }
                 }
+            }
+        }
+
+        $sumMax = 0;
+        foreach ($this->collection as list($value, $score)) {
+            if ($score > $sumMax) {
+                $sumMax = $score;
+            }
+        }
+
+        if ($sumMax > 0) {
+            $remaining = 1 - $max;
+
+            foreach ($this->collection as $key => list($existingValue, $existingScore)) {
+                $a = $originalCollection->getScore($existingValue);
+                $b = $collection->getScore($existingValue);
+
+                $certainty = $a + $b - $a * $b;
+
+                $newScore = $existingScore * $max / $sumMax;
+                $newScore+= 0.5 * ($remaining * $certainty); // boost score a little depending on certainty
+
+                $this->collection[$key] = [
+                    $existingValue,
+                    $newScore
+                ];
             }
         }
     }

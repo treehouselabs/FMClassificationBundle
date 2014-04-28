@@ -115,13 +115,42 @@ class ScoredCollectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             [
-                [$object1, 1],
+                [$object1, 1.0],
                 [$object3, 0.7],
                 [$object4, 0.6],
                 [$object2, 0.5],
             ],
             $collection1->raw()
         );
+    }
+
+    public function testMergeSumsExistingItems2()
+    {
+        $object1 = (object) ['name' => 'object1'];
+        $object2 = (object) ['name' => 'object2'];
+        $object3 = (object) ['name' => 'object3'];
+        $object4 = (object) ['name' => 'object4'];
+        $object5 = (object) ['name' => 'object5'];
+
+        $collection1 = new WeightedCollection();
+
+        $collection1->add($object1, 0.6);
+        $collection1->add($object2, 0.3);
+        $collection1->add($object3, 0.75);
+        $collection1->add($object4, 0.8);
+        $collection1->add($object5, 0.4);
+
+        $collection2 = new WeightedCollection();
+        $collection2->add($object1, 0.74);
+        $collection2->add($object2, 0.2);
+        $collection2->add($object3, 0.5);
+        // object4 deliberately not in set
+        $collection2->add($object5, 0.4);
+
+        $collection1->merge($collection2);
+
+        $this->assertGreaterThanOrEqual(0.8, $collection1->topScore());
+        $this->assertEquals($object1, $collection1->top());
     }
 
     public function testMap()
