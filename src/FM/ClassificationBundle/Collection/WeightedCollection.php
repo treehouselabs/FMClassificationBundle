@@ -112,7 +112,7 @@ class WeightedCollection
         $max = 0;
         foreach ($collection->raw() as list($value, $score)) {
             if ($score > $max) {
-                $max = $score;
+                $max = $score * $weight;
             }
         }
 
@@ -155,7 +155,7 @@ class WeightedCollection
                 $a = $originalCollection->getScore($existingValue);
                 $b = $collection->getScore($existingValue);
 
-                $certainty = $a + $b - $a * $b;
+                $certainty = $a + $b - ($a * $b);
 
                 $newScore = $existingScore * $max / $sumMax;
                 $newScore+= 0.5 * ($remaining * $certainty); // boost score a little depending on certainty
