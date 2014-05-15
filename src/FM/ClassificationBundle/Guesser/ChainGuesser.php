@@ -126,7 +126,7 @@ class ChainGuesser implements GuesserInterface
                 'guesser' => get_class($guesser),
                 'value' => json_encode($value),
                 'topScore' => $guesses->topScore(),
-                'top' => is_scalar($guesses->top()) ? var_export($guesses->top(), true) : get_class($guesses->top()) . ':' . (string) $guesses->top(),
+                'top' => !is_object($guesses->top()) ? var_export($guesses->top(), true) : get_class($guesses->top()) . ':' . (string) $guesses->top(),
                 'max' => $max,
                 'boost' => $boost,
                 'baseWeight' => $baseWeight,
@@ -147,6 +147,13 @@ class ChainGuesser implements GuesserInterface
     protected function guessOr($value)
     {
         $retval = null;
+
+        $max = 0;
+        foreach ($this->guessers as list($guesser, $boost, $inputNormalizer, $outputNormalizer)) {
+            if ($boost > $max) {
+                $max = $boost;
+            }
+        }
 
         $results = new WeightedCollection();
 
@@ -172,11 +179,13 @@ class ChainGuesser implements GuesserInterface
                 'value' => json_encode($value),
                 'topScore' => $guesses->topScore(),
                 'top' => is_scalar($guesses->top()) ? var_export($guesses->top(), true) : get_class($guesses->top()) . ':' . (string) $guesses->top(),
-                'weight' => 1,
+                'boost' => $boost,
+                'max' => $max,
+                'weight' => $boost / $max,
                 'subreport' => ($guesser instanceof ChainGuesser ? $guesser->getReport() : null),
             ];
 
-            $results->merge($guesses, 1);
+            $results->merge($guesses, $boost / $max);
         }
 
         return $results;

@@ -96,11 +96,12 @@ class ResultPersistingClassifier implements TrainableClassifierInterface
         // if we have an existing record, update it's score, otherwise insert
         if ($existingClassifyResult = $this->doctrine->getRepository('FMClassificationBundle:ClassifyResult')->findOneByHash($classifyResult->getHash())) {
             $existingClassifyResult->setScore(round($confidence, 3));
+
+            $this->doctrine->getManager()->flush($existingClassifyResult);
         } else {
             $this->doctrine->getManager()->persist($classifyResult);
+            $this->doctrine->getManager()->flush($classifyResult);
         }
-
-        $this->doctrine->getManager()->flush();
     }
 
     /**
@@ -125,10 +126,10 @@ class ResultPersistingClassifier implements TrainableClassifierInterface
             foreach ($classifyResults as $classifyResult) {
                 $classifyResult->setExpected($expected);
             }
+
+            $this->doctrine->getManager()->flush($classifyResults);
         } else {
             $this->persistResult($input, null, null, $expected);
         }
-
-        $this->doctrine->getManager()->flush();
     }
 }

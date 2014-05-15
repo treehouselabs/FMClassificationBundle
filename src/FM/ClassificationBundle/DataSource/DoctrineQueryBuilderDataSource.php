@@ -2,22 +2,26 @@
 
 namespace FM\ClassificationBundle\DataSource;
 
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 
 class DoctrineQueryBuilderDataSource implements DataSourceInterface
 {
     protected $qb;
     protected $iterator;
-    protected $previousRecord;
+    protected $hydrationMode;
 
     /**
      * Constructor.
      *
      * @param QueryBuilder $qb
+     * @param int $hydrationMode
      */
-    public function __construct(QueryBuilder $qb)
+    public function __construct(QueryBuilder $qb, $hydrationMode = AbstractQuery::HYDRATE_OBJECT)
     {
         $this->qb = $qb;
+        $this->hydrationMode = $hydrationMode;
     }
 
     public function next()
@@ -30,13 +34,7 @@ class DoctrineQueryBuilderDataSource implements DataSourceInterface
      */
     public function current()
     {
-        if (null !== $this->previousRecord) {
-            $this->qb->getEntityManager()->detach($this->previousRecord);
-        }
-
         if (false !== $row = $this->getInnerIterator()->current()) {
-            $this->previousRecord = $row[0];
-
             return $row[0];
         }
 
@@ -71,6 +69,12 @@ class DoctrineQueryBuilderDataSource implements DataSourceInterface
 
     protected function getInnerIterator()
     {
-        return $this->iterator ?: $this->iterator = $this->qb->getQuery()->iterate();
+        if (null === $this->iterator) {
+            $query = $this->qb->getQuery();
+
+            $this->iterator = $query->iterate(null, $this->hydrationMode);
+        }
+
+        return $this->iterator;
     }
 }
