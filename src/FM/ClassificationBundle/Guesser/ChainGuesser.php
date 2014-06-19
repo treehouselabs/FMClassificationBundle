@@ -127,6 +127,8 @@ class ChainGuesser implements GuesserInterface
                 'value' => json_encode($value),
                 'topScore' => $guesses->topScore(),
                 'top' => !is_object($guesses->top()) ? var_export($guesses->top(), true) : get_class($guesses->top()) . ':' . (string) $guesses->top(),
+                'results_topScore' => $results->topScore(),
+                'results_top' => !is_object($results->top()) ? var_export($results->top(), true) : get_class($results->top()) . ':' . (string) $results->top(),
                 'max' => $max,
                 'boost' => $boost,
                 'baseWeight' => $baseWeight,
