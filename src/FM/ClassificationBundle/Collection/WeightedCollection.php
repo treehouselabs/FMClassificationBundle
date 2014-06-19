@@ -152,8 +152,13 @@ class WeightedCollection
             $remaining = 1 - $max;
 
             foreach ($this->collection as $key => list($existingValue, $existingScore)) {
-                $a = $originalCollection->getScore($existingValue);
-                $b = $collection->getScore($existingValue);
+                // skip score bump for newly merged items
+                if (in_array($existingValue, $collection->all())) {
+                    continue;
+                }
+
+                $a = $originalCollection->getScore($existingValue); // original score
+                $b = $this->getScore($existingValue);               // new score after merge
 
                 $certainty = $a + $b - ($a * $b);
 
@@ -192,7 +197,7 @@ class WeightedCollection
     protected function sort()
     {
         $values = array();
-        foreach ($this->collection as $key => list($value, $score)) {
+        foreach ($this->collection as list($value, $score)) {
             $values[] = $score;
         }
         $keys = array_keys($this->collection);
