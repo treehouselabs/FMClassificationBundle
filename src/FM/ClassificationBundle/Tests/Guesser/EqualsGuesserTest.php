@@ -17,7 +17,7 @@ class EqualsGuesserTest extends \PHPUnit_Framework_TestCase
         $dataSourceMock = $this->getMockBuilder('FM\ClassificationBundle\DataSource\DataSourceInterface')
             ->getMockForAbstractClass();
 
-        $guesser = new EqualsGuesser($normalizerMock, $dataSourceMock);
+        $guesser = new EqualsGuesser($dataSourceMock, $normalizerMock);
 
         $this->assertInstanceOf('FM\ClassificationBundle\Guesser\EqualsGuesser', $guesser);
         $this->assertInstanceOf('FM\ClassificationBundle\Guesser\GuesserInterface', $guesser);
@@ -29,7 +29,7 @@ class EqualsGuesserTest extends \PHPUnit_Framework_TestCase
     public function testGuess($dataSource, $guessValue, $top, $topScore)
     {
         $normalizer = new LowercaseNormalizer();
-        $guesser    = new EqualsGuesser($normalizer, $dataSource);
+        $guesser    = new EqualsGuesser($dataSource, $normalizer);
 
         $result = $guesser->guess($guessValue);
 
@@ -49,7 +49,7 @@ class EqualsGuesserTest extends \PHPUnit_Framework_TestCase
 
         $normalizer           = new LowercaseNormalizer();
         $dataSourceNormalizer = new CallbackNormalizer(function ($value) { return $value->name; });
-        $guesser              = new EqualsGuesser($normalizer, $simpleDataSource, $dataSourceNormalizer);
+        $guesser              = new EqualsGuesser($simpleDataSource, $normalizer, $dataSourceNormalizer);
 
         $result = $guesser->guess('second');
 
@@ -69,7 +69,7 @@ class EqualsGuesserTest extends \PHPUnit_Framework_TestCase
 
         $normalizer           = new LowercaseNormalizer();
         $dataSourceNormalizer = new CallbackNormalizer(function ($value) { return $value->name; });
-        $guesser              = new EqualsGuesser($normalizer, $simpleDataSource, $dataSourceNormalizer);
+        $guesser              = new EqualsGuesser($simpleDataSource, $normalizer, $dataSourceNormalizer);
 
         $result = $guesser->guess(null);
 
