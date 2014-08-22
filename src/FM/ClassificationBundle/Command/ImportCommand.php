@@ -28,7 +28,7 @@ class ImportCommand extends ContainerAwareCommand
 
         $file = $input->getArgument('file');
         if (!file_exists($file)) {
-            throw new \InvalidArgumentException(sprintf('File "%s" isn\'t found', $path));
+            throw new \InvalidArgumentException(sprintf('File "%s" isn\'t found', $file));
         }
 
         $input = Yaml::parse(file_get_contents($file));
@@ -36,7 +36,9 @@ class ImportCommand extends ContainerAwareCommand
         foreach ($input['FM\ClassificationBundle\Entity\ClassifyResult'] as $classifyResultData) {
             $classifyResult = new ClassifyResult();
             $classifyResult->setInput($classifyResultData['input']);
-            $classifyResult->setExpected($classifyResultData['expected']);
+            if (null !== $classifyResultData['expected']) {
+                $classifyResult->setExpected($classifyResultData['expected']);
+            }
             $classifyResult->setClassifier($classifyResultData['classifier']);
 
             if ($existingClassifyResult = $repo->findOneByHash($classifyResult->getHash())) {

@@ -38,8 +38,14 @@ class BayesClassifier implements TrainableClassifierInterface
 
     public function train(DataSourceInterface $dataSource)
     {
-        foreach ($dataSource as list($title, $label)) {
-            $this->bayesClassifier->train($label, $title);
+        foreach ($dataSource as list($title, $label, $weight)) {
+            if (null === $weight) {
+                $weight = 1;
+            }
+
+            for ($w = 0; $w < $weight; $w++) {
+                $this->bayesClassifier->train($label, $title);
+            }
         }
     }
 }

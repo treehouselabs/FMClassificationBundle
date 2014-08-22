@@ -76,9 +76,10 @@ class ResultPersistingClassifier implements TrainableClassifierInterface
     /**
      * Persists the result
      *
-     * @param $input
-     * @param $output
-     * @param $confidence
+     * @param mixed       $input
+     * @param mixed       $output
+     * @param float       $confidence
+     * @param null|string $expected
      */
     protected function persistResult($input, $output, $confidence, $expected = null)
     {
@@ -95,7 +96,9 @@ class ResultPersistingClassifier implements TrainableClassifierInterface
 
         // if we have an existing record, update it's score, otherwise insert
         if ($existingClassifyResult = $this->doctrine->getRepository('FMClassificationBundle:ClassifyResult')->findOneByHash($classifyResult->getHash())) {
+            $existingClassifyResult->setOutput($output);
             $existingClassifyResult->setScore(round($confidence, 3));
+            $existingClassifyResult->incrementHits();
 
             $this->doctrine->getManager()->flush($existingClassifyResult);
         } else {
@@ -125,6 +128,14 @@ class ResultPersistingClassifier implements TrainableClassifierInterface
         if (count($classifyResults) > 0) {
             foreach ($classifyResults as $classifyResult) {
                 $classifyResult->setExpected($expected);
+
+                if (null === $expected) {
+                    $classifyResult->setWeight(1);
+                } else {
+                    $classifyResult->incrementWeight();
+                }
+
+                $classifyResult->setScore(null);
             }
 
             $this->doctrine->getManager()->flush($classifyResults);
