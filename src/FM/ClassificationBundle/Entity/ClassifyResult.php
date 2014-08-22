@@ -8,7 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
  * Model to persist classification results
  * 
  * @ORM\Entity()
- * @ORM\Table()
+ * @ORM\Table(indexes={
+ *   @ORM\Index(columns={"classifier"})
+ * })
  */
 class ClassifyResult
 {
@@ -52,6 +54,13 @@ class ClassifyResult
     protected $score;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $hits;
+
+    /**
      * Expected output label (used to train the system)
      *
      * @var string
@@ -61,6 +70,13 @@ class ClassifyResult
     protected $expected;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $weight;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string", length=255, unique=true)
@@ -68,10 +84,20 @@ class ClassifyResult
     protected $hash;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $datetimeTrained;
+
+    /**
      * Constructor.
      */
     public function __construct()
     {
+        $this->hits = 1;
+        $this->weight = 1;
+
         $this->updateHash();
     }
 
@@ -168,6 +194,10 @@ class ClassifyResult
     {
         $this->expected = $expected;
 
+        if (null !== $expected) {
+            $this->setDatetimeTrained(new \DateTime());
+        }
+
         return $this;
     }
 
@@ -194,7 +224,7 @@ class ClassifyResult
      */
     protected function updateHash()
     {
-        $this->hash = md5(serialize($this->input) . serialize($this->output) . $this->classifier);
+        $this->hash = md5(json_encode($this->input) . $this->classifier);
     }
 
     /**
@@ -233,5 +263,77 @@ class ClassifyResult
         $this->hash = $hash;
 
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHits()
+    {
+        return $this->hits;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWeight()
+    {
+        return $this->weight;
+    }
+
+    /**
+     * @param int $step
+     *
+     * @return $this
+     */
+    public function incrementHits($step = 1)
+    {
+        $this->hits += $step;
+
+        return $this;
+    }
+
+    /**
+     * @param int $step
+     *
+     * @return $this
+     */
+    public function incrementWeight($step = 1)
+    {
+        $this->weight += $step;
+
+        return $this;
+    }
+
+    /**
+     * @param int $weight
+     *
+     * @return $this
+     */
+    public function setWeight($weight)
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    /**
+     * @param \DateTime $datetimeTrained
+     *
+     * @return $this
+     */
+    public function setDatetimeTrained(\DateTime $datetimeTrained)
+    {
+        $this->datetimeTrained = $datetimeTrained;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDatetimeTrained()
+    {
+        return $this->datetimeTrained;
     }
 }

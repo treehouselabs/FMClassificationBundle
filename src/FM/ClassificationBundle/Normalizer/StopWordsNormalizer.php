@@ -29,7 +29,7 @@ class StopWordsNormalizer implements NormalizerInterface
         }
 
         foreach ($this->stopWords as $word) {
-            $value = str_ireplace($word, '', $value);
+            $value = preg_replace('/([\s\n\t]|^)'.preg_quote($word).'([\s\n\t]|$)/i', '', $value);
         }
 
         return $value;

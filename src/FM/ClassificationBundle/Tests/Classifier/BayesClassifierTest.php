@@ -69,7 +69,7 @@ class BayesClassifierTest extends \PHPUnit_Framework_TestCase
         $classifier = new BayesClassifier($baseClassifier);
 
         $classifier->train(new ArrayDataSource([
-            ['label', 'title'],
+            ['label', 'title', 1],
         ]));
     }
 }
