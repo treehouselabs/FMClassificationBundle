@@ -223,10 +223,6 @@ class ClassifyResult
     protected function updateHash()
     {
         $this->hash = md5(json_encode($this->input) . $this->classifier);
-
-//        if ($this->classifier === 'organisation') {
-//            var_dump($this->hash . ': ' .json_encode($this->input));
-//        }
     }
 
     /**
