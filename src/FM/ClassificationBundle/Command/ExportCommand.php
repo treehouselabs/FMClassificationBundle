@@ -36,7 +36,7 @@ class ExportCommand extends ContainerAwareCommand
 
         $file = $path . '/classify_result.yml';
 
-        $qb = $repo->createQueryBuilder('cr'); //->where('cr.expected IS NOT NULL');
+        $qb = $repo->createQueryBuilder('cr')->where('cr.expected IS NOT NULL');
 
         if ($input->getOption('classifier')) {
             $qb->andWhere('cr.classifier = :classifier');
