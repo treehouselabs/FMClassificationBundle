@@ -146,8 +146,6 @@ class ClassifyResult
     {
         $this->output = $output;
 
-        $this->updateHash();
-
         return $this;
     }
 
