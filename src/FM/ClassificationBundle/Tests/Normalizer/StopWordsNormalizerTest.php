@@ -37,9 +37,9 @@ class StopWordsNormalizerTest extends \PHPUnit_Framework_TestCase
     public function normalizeDataProvider()
     {
         return [
-            [['hello'], 'Hello  world', ' world'],
-            [['wat', 'een'], 'wat een mooi gebouw', 'mooi gebouw'],
-            [['B.V.'], 'Financial-media B.V.', 'Financial-media'],
+            [['hello'], 'Hello  world', '  world'],
+            [['wat', 'een'], 'wat een mooi gebouw', '  mooi gebouw'],
+            [['B.V.'], 'Financial-media B.V.', 'Financial-media '],
             [['in'], 'omgeving', 'omgeving'],
         ];
     }
