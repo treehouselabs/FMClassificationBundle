@@ -116,11 +116,13 @@ class ResultPersistingClassifier implements TrainableClassifierInterface
         /** @var EntityRepository $repository */
         $repository = $this->doctrine->getRepository('FMClassificationBundle:ClassifyResult');
 
+        $hash = ClassifyResult::generateHash($input, $this->getClassifierName());
+
         /** @var ClassifyResult[] $classifyResults */
         $classifyResults = $repository->createQueryBuilder('cr')
-            ->where('cr.input LIKE :input')
+            ->where('cr.hash = :hash')
             ->andWhere('cr.classifier = :classifier')
-            ->setParameter(':input', '%'.json_encode($input).'%')
+            ->setParameter(':hash', $hash)
             ->setParameter(':classifier', $this->getClassifierName())
             ->getQuery()
             ->getResult();
