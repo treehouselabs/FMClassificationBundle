@@ -222,7 +222,20 @@ class ClassifyResult
      */
     protected function updateHash()
     {
-        $this->hash = md5(json_encode($this->input) . $this->classifier);
+        $this->hash = self::generateHash($this->input, $this->classifier);
+    }
+
+    /**
+     * Generate a hash
+     *
+     * @param $input
+     * @param $classifier
+     *
+     * @return string
+     */
+    public static function generateHash($input, $classifier)
+    {
+        return md5(json_encode($input) . $classifier);
     }
 
     /**
