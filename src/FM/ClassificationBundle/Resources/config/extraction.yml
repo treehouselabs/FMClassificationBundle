@@ -1,0 +1,33 @@
+parameters:
+  fm_classification.extractor.class: FM\ClassificationBundle\Extraction\KeywordExtractorProxy
+  fm_classification.extractor.concrete.class: FM\ClassificationBundle\Extraction\KeywordExtractor
+  fm_classification.extractor.file_storage.class: FM\ClassificationBundle\Extraction\Storage\FileStorage
+  fm_classification.extractor.whitespace_tokenizer.class: FM\ClassificationBundle\Extraction\Tokenization\WhitespaceTokenizer
+  fm_classification.extractor.abstract_training_source.class: FM\ClassificationBundle\Extraction\Training\Source\AbstractTrainingSource
+
+services:
+  fm_classification.extractor.concrete:
+    public: false
+    class: %fm_classification.extractor.concrete.class%
+    calls:
+      - [ setStorage, [@fm_classification.extractor.file_storage]]
+      - [ setTokenizer, [@fm_classification.extractor.whitespace_tokenizer]]
+
+  fm_classification.extractor:
+    class: %fm_classification.extractor.class%
+    arguments:
+      - @fm_classification.extractor.concrete
+
+  fm_classification.extractor.file_storage:
+    class: %fm_classification.extractor.file_storage.class%
+    arguments:
+      - %kernel.cache_dir%/extractor
+
+  fm_classification.extractor.abstract_training_source:
+    abstract: true
+    class: %fm_classification.extractor.abstract_training_source.class%
+    arguments:
+      - @doctrine
+
+  fm_classification.extractor.whitespace_tokenizer:
+    class: %fm_classification.extractor.whitespace_tokenizer.class%
