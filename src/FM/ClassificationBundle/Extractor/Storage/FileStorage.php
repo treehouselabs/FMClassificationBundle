@@ -1,6 +1,6 @@
 <?php
 
-namespace FM\ClassificationBundle\Extraction\Storage;
+namespace FM\ClassificationBundle\Extractor\Storage;
 
 class FileStorage implements StorageInterface
 {

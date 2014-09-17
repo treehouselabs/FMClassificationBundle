@@ -1,6 +1,6 @@
 <?php
 
-namespace FM\ClassificationBundle\Extraction;
+namespace FM\ClassificationBundle\Extractor;
 
 interface ExtractorInterface
 {

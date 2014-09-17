@@ -1,6 +1,6 @@
 <?php
 
-namespace FM\ClassificationBundle\Extraction\Tokenization;
+namespace FM\ClassificationBundle\Extractor\Tokenization;
 
 use FM\ClassificationBundle\Tokenizer\TokenizerInterface;
 use FM\ClassificationBundle\Tokenizer\WhitespaceAndPunctuationTokenizer;

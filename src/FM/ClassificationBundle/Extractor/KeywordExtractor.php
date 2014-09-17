@@ -1,13 +1,14 @@
 <?php
 
-namespace FM\ClassificationBundle\Extraction;
+namespace FM\ClassificationBundle\Extractor;
 
-use FM\ClassificationBundle\Extraction\Storage\StorageInterface;
-use FM\ClassificationBundle\Extraction\Training\Source\AbstractTrainingSource;
-use FM\ClassificationBundle\Extraction\Training\TrainableExtractorInterface;
+use FM\ClassificationBundle\Extractor\Storage\StorageInterface;
+use FM\ClassificationBundle\Extractor\Storage\StoreableInterface;
+use FM\ClassificationBundle\Extractor\Training\Source\AbstractTrainingSource;
+use FM\ClassificationBundle\Extractor\Training\TrainableExtractorInterface;
 use FM\ClassificationBundle\Tokenizer\TokenizerInterface;
 
-class KeywordExtractor implements TrainableExtractorInterface
+class KeywordExtractor implements TrainableExtractorInterface, StoreableInterface
 {
     const STORAGE_ID = 'keyword';
 

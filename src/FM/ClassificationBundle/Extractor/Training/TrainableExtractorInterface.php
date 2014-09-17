@@ -1,8 +1,8 @@
 <?php
 
-namespace FM\ClassificationBundle\Extraction\Training;
+namespace FM\ClassificationBundle\Extractor\Training;
 
-use FM\ClassificationBundle\Extraction\Training\Source\AbstractTrainingSource;
+use FM\ClassificationBundle\Extractor\Training\Source\AbstractTrainingSource;
 
 interface TrainableExtractorInterface
 {

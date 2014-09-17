@@ -1,6 +1,6 @@
 <?php
 
-namespace FM\ClassificationBundle\Extraction\Training\Source;
+namespace FM\ClassificationBundle\Extractor\Training\Source;
 
 use FM\ClassificationBundle\DataSource\DoctrineQueryBuilderDataSource;
 use Symfony\Bridge\Doctrine\RegistryInterface;

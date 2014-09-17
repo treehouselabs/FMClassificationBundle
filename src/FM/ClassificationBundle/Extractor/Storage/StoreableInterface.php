@@ -1,19 +1,9 @@
 <?php
 
-namespace FM\ClassificationBundle\Extraction\Storage;
+namespace FM\ClassificationBundle\Extractor\Storage;
 
 interface StoreableInterface
 {
-    /**
-     * @param StorageInterface $storage
-     */
-    public function setStorage(StorageInterface $storage);
-
-    /**
-     * @return StorageInterface
-     */
-    public function getStorage();
-
     /**
      * @return boolean
      *

@@ -1,9 +1,9 @@
 <?php
 
-namespace FM\ClassificationBundle\Extraction;
+namespace FM\ClassificationBundle\Extractor;
 
-use FM\ClassificationBundle\Extraction\Training\Source\AbstractTrainingSource;
-use FM\ClassificationBundle\Extraction\Training\TrainableExtractorInterface;
+use FM\ClassificationBundle\Extractor\Training\Source\AbstractTrainingSource;
+use FM\ClassificationBundle\Extractor\Training\TrainableExtractorInterface;
 
 /**
  * The keyword extractor proxy provides a caching and initialization layer above the concrete keyword extractor.

@@ -1,6 +1,6 @@
 <?php
 
-namespace FM\ClassificationBundle\Extraction\Storage;
+namespace FM\ClassificationBundle\Extractor\Storage;
 
 interface StorageInterface
 {

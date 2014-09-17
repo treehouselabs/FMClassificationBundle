@@ -1,9 +1,9 @@
 parameters:
-  fm_classification.extractor.class: FM\ClassificationBundle\Extraction\KeywordExtractorProxy
-  fm_classification.extractor.concrete.class: FM\ClassificationBundle\Extraction\KeywordExtractor
-  fm_classification.extractor.file_storage.class: FM\ClassificationBundle\Extraction\Storage\FileStorage
-  fm_classification.extractor.whitespace_tokenizer.class: FM\ClassificationBundle\Extraction\Tokenization\WhitespaceTokenizer
-  fm_classification.extractor.abstract_training_source.class: FM\ClassificationBundle\Extraction\Training\Source\AbstractTrainingSource
+  fm_classification.extractor.class: FM\ClassificationBundle\Extractor\KeywordExtractorProxy
+  fm_classification.extractor.concrete.class: FM\ClassificationBundle\Extractor\KeywordExtractor
+  fm_classification.extractor.file_storage.class: FM\ClassificationBundle\Extractor\Storage\FileStorage
+  fm_classification.extractor.whitespace_tokenizer.class: FM\ClassificationBundle\Extractor\Tokenization\WhitespaceTokenizer
+  fm_classification.extractor.abstract_training_source.class: FM\ClassificationBundle\Extractor\Training\Source\AbstractTrainingSource
 
 services:
   fm_classification.extractor.concrete:
