@@ -4,8 +4,18 @@ namespace FM\ClassificationBundle\Extraction\Training;
 
 use FM\ClassificationBundle\Extraction\Training\Source\AbstractTrainingSource;
 
-interface TrainingSourceChangeableInterface
+interface TrainableExtractorInterface
 {
+    /**
+     * @return boolean
+     */
+    public function train();
+
+    /**
+     * @return boolean
+     */
+    public function isTrained();
+
     /**
      * @param AbstractTrainingSource $dataSource
      */

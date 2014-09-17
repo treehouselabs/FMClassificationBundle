@@ -3,9 +3,13 @@
 namespace FM\ClassificationBundle\Extraction;
 
 use FM\ClassificationBundle\Extraction\Training\Source\AbstractTrainingSource;
-use FM\ClassificationBundle\Extraction\Training\TrainingSourceChangeableInterface;
+use FM\ClassificationBundle\Extraction\Training\TrainableExtractorInterface;
 
-class KeywordExtractorProxy implements ExtractorInterface, TrainingSourceChangeableInterface
+/**
+ * The keyword extractor proxy provides a caching and initialization layer above the concrete keyword extractor.
+ * See proxy pattern: @link http://en.wikipedia.org/wiki/Proxy_pattern
+ */
+class KeywordExtractorProxy implements TrainableExtractorInterface
 {
     /**
      * @var KeywordExtractor
@@ -47,6 +51,22 @@ class KeywordExtractorProxy implements ExtractorInterface, TrainingSourceChangea
     public function getTrainingSource()
     {
         return $this->extractor->getTrainingSource();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function train()
+    {
+        return $this->extractor->train();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isTrained()
+    {
+        return $this->extractor->isTrained();
     }
 
 

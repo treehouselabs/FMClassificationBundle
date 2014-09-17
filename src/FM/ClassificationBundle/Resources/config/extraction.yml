@@ -9,9 +9,9 @@ services:
   fm_classification.extractor.concrete:
     public: false
     class: %fm_classification.extractor.concrete.class%
-    calls:
-      - [ setStorage, [@fm_classification.extractor.file_storage]]
-      - [ setTokenizer, [@fm_classification.extractor.whitespace_tokenizer]]
+    arguments:
+      - @fm_classification.extractor.whitespace_tokenizer
+      - @fm_classification.extractor.file_storage
 
   fm_classification.extractor:
     class: %fm_classification.extractor.class%

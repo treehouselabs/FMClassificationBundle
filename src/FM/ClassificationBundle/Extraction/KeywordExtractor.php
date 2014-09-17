@@ -3,14 +3,11 @@
 namespace FM\ClassificationBundle\Extraction;
 
 use FM\ClassificationBundle\Extraction\Storage\StorageInterface;
-use FM\ClassificationBundle\Extraction\Storage\StoreableInterface;
-use FM\ClassificationBundle\Extraction\Tokenization\TokenizingInterface;
 use FM\ClassificationBundle\Extraction\Training\Source\AbstractTrainingSource;
-use FM\ClassificationBundle\Extraction\Training\TrainableInterface;
-use FM\ClassificationBundle\Extraction\Training\TrainingSourceChangeableInterface;
+use FM\ClassificationBundle\Extraction\Training\TrainableExtractorInterface;
 use FM\ClassificationBundle\Tokenizer\TokenizerInterface;
 
-class KeywordExtractor implements TrainableInterface, TokenizingInterface, StoreableInterface, TrainingSourceChangeableInterface
+class KeywordExtractor implements TrainableExtractorInterface
 {
     const STORAGE_ID = 'keyword';
 
@@ -50,6 +47,16 @@ class KeywordExtractor implements TrainableInterface, TokenizingInterface, Store
     protected $tokenizer;
 
     /**
+     * @param TokenizerInterface $tokenizer
+     * @param StorageInterface   $storage
+     */
+    public function __construct(TokenizerInterface $tokenizer, StorageInterface $storage)
+    {
+        $this->tokenizer = $tokenizer;
+        $this->storage = $storage;
+    }
+
+    /**
      * @inheritdoc
      */
     public function train()
@@ -75,7 +82,7 @@ class KeywordExtractor implements TrainableInterface, TokenizingInterface, Store
     /**
      * @param string $data
      */
-    public function trainOne($data)
+    protected function trainOne($data)
     {
         $tokens = $this->tokenizer->tokenize($data);
 
@@ -187,22 +194,6 @@ class KeywordExtractor implements TrainableInterface, TokenizingInterface, Store
     /**
      * @inheritdoc
      */
-    public function setStorage(StorageInterface $storage)
-    {
-        $this->storage = $storage;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getStorage()
-    {
-        return $this->storage;
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function store()
     {
         $id = $this->storage->store([$this->docCount, $this->tokenDocCount, $this->tokens], self::STORAGE_ID);
@@ -226,21 +217,5 @@ class KeywordExtractor implements TrainableInterface, TokenizingInterface, Store
         list($this->docCount, $this->tokenDocCount, $this->tokens) = $data;
 
         return true;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setTokenizer(TokenizerInterface $tokenizer)
-    {
-        $this->tokenizer = $tokenizer;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getTokenizer()
-    {
-        return $this->tokenizer;
     }
 }
