@@ -8,7 +8,7 @@ use FM\ClassificationBundle\Extractor\Training\Source\AbstractTrainingSource;
 use FM\ClassificationBundle\Extractor\Training\TrainableExtractorInterface;
 use FM\ClassificationBundle\Tokenizer\TokenizerInterface;
 
-class KeywordExtractor implements TrainableExtractorInterface, StoreableInterface
+class TFIDFExtractor implements TrainableExtractorInterface, StoreableInterface
 {
     const STORAGE_ID = 'keyword';
 
@@ -132,7 +132,7 @@ class KeywordExtractor implements TrainableExtractorInterface, StoreableInterfac
     public function extract($input)
     {
         if ($this->docCount < 1) {
-            throw new \RuntimeException('Unable to extract keywords, extractor has no data!');
+            throw new \RuntimeException('Unable to extract, extractor has no data!');
         }
 
         $tokens = $this->tokenizer->tokenize($input);
@@ -197,9 +197,15 @@ class KeywordExtractor implements TrainableExtractorInterface, StoreableInterfac
      */
     public function store()
     {
-        $id = $this->storage->store([$this->docCount, $this->tokenDocCount, $this->tokens], self::STORAGE_ID);
+        $id = $this->storage->store([
+            $this->docCount,
+            $this->tokenDocCount,
+            $this->tokens,
+            $this->maxTokenFrequency
+        ], self::STORAGE_ID);
+
         if (!$id) {
-            throw new \RuntimeException(sprintf('Unable to store keyword extractor!'));
+            throw new \RuntimeException(sprintf('Unable to store extractor data!'));
         }
 
         return $id;
@@ -212,10 +218,10 @@ class KeywordExtractor implements TrainableExtractorInterface, StoreableInterfac
     {
         $data = $this->storage->load(self::STORAGE_ID);
         if (!$data) {
-            throw new \RuntimeException(sprintf('Unable to load keyword extractor!'));
+            throw new \RuntimeException(sprintf('Unable to load extractor data!'));
         }
 
-        list($this->docCount, $this->tokenDocCount, $this->tokens) = $data;
+        list($this->docCount, $this->tokenDocCount, $this->tokens, $this->maxTokenFrequency) = $data;
 
         return true;
     }

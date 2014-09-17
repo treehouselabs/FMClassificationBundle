@@ -1,22 +1,22 @@
 parameters:
-  fm_classification.extractor.class: FM\ClassificationBundle\Extractor\KeywordExtractorProxy
-  fm_classification.extractor.concrete.class: FM\ClassificationBundle\Extractor\KeywordExtractor
+  fm_classification.tfidf_extractor.class: FM\ClassificationBundle\Extractor\TFIDFExtractorProxy
+  fm_classification.tfidf_extractor.concrete.class: FM\ClassificationBundle\Extractor\TFIDFExtractor
   fm_classification.extractor.file_storage.class: FM\ClassificationBundle\Extractor\Storage\FileStorage
   fm_classification.extractor.whitespace_tokenizer.class: FM\ClassificationBundle\Extractor\Tokenization\WhitespaceTokenizer
   fm_classification.extractor.abstract_training_source.class: FM\ClassificationBundle\Extractor\Training\Source\AbstractTrainingSource
 
 services:
-  fm_classification.extractor.concrete:
+  fm_classification.tfidf_extractor.concrete:
     public: false
-    class: %fm_classification.extractor.concrete.class%
+    class: %fm_classification.tfidf_extractor.concrete.class%
     arguments:
       - @fm_classification.extractor.whitespace_tokenizer
       - @fm_classification.extractor.file_storage
 
-  fm_classification.extractor:
-    class: %fm_classification.extractor.class%
+  fm_classification.tfidf_extractor:
+    class: %fm_classification.tfidf_extractor.class%
     arguments:
-      - @fm_classification.extractor.concrete
+      - @fm_classification.tfidf_extractor.concrete
 
   fm_classification.extractor.file_storage:
     class: %fm_classification.extractor.file_storage.class%

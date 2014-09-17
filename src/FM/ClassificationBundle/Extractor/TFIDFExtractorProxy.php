@@ -9,17 +9,17 @@ use FM\ClassificationBundle\Extractor\Training\TrainableExtractorInterface;
  * The keyword extractor proxy provides a caching and initialization layer above the concrete keyword extractor.
  * See proxy pattern: @link http://en.wikipedia.org/wiki/Proxy_pattern
  */
-class KeywordExtractorProxy implements TrainableExtractorInterface
+class TFIDFExtractorProxy implements TrainableExtractorInterface
 {
     /**
-     * @var KeywordExtractor
+     * @var TrainableExtractorInterface
      */
     protected $extractor;
 
     /**
-     * @param KeywordExtractor $extractor
+     * @param TrainableExtractorInterface $extractor
      */
-    public function __construct(KeywordExtractor $extractor)
+    public function __construct(TrainableExtractorInterface $extractor)
     {
         $this->extractor = $extractor;
     }
