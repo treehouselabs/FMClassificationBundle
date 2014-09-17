@@ -9,6 +9,10 @@ Provides a framework to build advanced classifiers.
 
 Returns a single "label" with a certain score.
 
+### Extractor
+
+Returns multiple "labels" for a given document (string).
+
 ### Guesser
 
 Returns a list of values with scores (WeightedCollection).
