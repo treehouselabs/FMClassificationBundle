@@ -2,16 +2,11 @@
 
 namespace FM\ClassificationBundle\Extractor;
 
-use FM\ClassificationBundle\Extractor\Storage\StorageInterface;
-use FM\ClassificationBundle\Extractor\Storage\StoreableInterface;
-use FM\ClassificationBundle\Extractor\Training\Source\AbstractTrainingSource;
-use FM\ClassificationBundle\Extractor\Training\TrainableExtractorInterface;
+use FM\ClassificationBundle\DataSource\DataSourceInterface;
 use FM\ClassificationBundle\Tokenizer\TokenizerInterface;
 
-class TFIDFExtractor implements TrainableExtractorInterface, StoreableInterface
+class TFIDFExtractor implements ExtractorInterface
 {
-    const STORAGE_ID = 'keyword';
-
     /**
      * @var int
      */
@@ -33,46 +28,36 @@ class TFIDFExtractor implements TrainableExtractorInterface, StoreableInterface
     protected $maxTokenFrequency;
 
     /**
-     * @var AbstractTrainingSource
-     */
-    protected $trainingSource;
-
-    /**
-     * @var StorageInterface
-     */
-    protected $storage;
-
-    /**
      * @var TokenizerInterface
      */
     protected $tokenizer;
 
     /**
      * @param TokenizerInterface $tokenizer
-     * @param StorageInterface   $storage
      */
-    public function __construct(TokenizerInterface $tokenizer, StorageInterface $storage)
+    public function __construct(TokenizerInterface $tokenizer)
     {
         $this->tokenizer = $tokenizer;
-        $this->storage = $storage;
     }
 
     /**
-     * @inheritdoc
+     * @param DataSourceInterface $dataSource DataSourceInterface $dataSource
+     *
+     * @throws \RuntimeException
+     *
+     * @return bool
      */
-    public function train()
+    public function train(DataSourceInterface $dataSource)
     {
-        if (!$this->trainingSource) {
-            throw new \RuntimeException('Unable to train, no datasource found!');
-        }
-
         $this->docCount = 0;
         $this->tokenDocCount = [];
         $this->tokens = [];
         $this->maxTokenFrequency = [];
 
-        foreach ($this->trainingSource as $row) {
-            $data = current($row);
+        foreach ($dataSource as $data) {
+            if (!is_string($data)) {
+                throw new \RuntimeException('Data source should only contain strings');
+            }
 
             $this->trainOne($data);
         }
@@ -116,14 +101,6 @@ class TFIDFExtractor implements TrainableExtractorInterface, StoreableInterface
 
         // update doc count
         $this->docCount++;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function isTrained()
-    {
-        return $this->docCount > 0;
     }
 
     /**
@@ -174,55 +151,5 @@ class TFIDFExtractor implements TrainableExtractorInterface, StoreableInterface
         });
 
         return $classifiedTokens;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setTrainingSource(AbstractTrainingSource $dataSource)
-    {
-        $this->trainingSource = $dataSource;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getTrainingSource()
-    {
-        return $this->trainingSource;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function store()
-    {
-        $id = $this->storage->store([
-            $this->docCount,
-            $this->tokenDocCount,
-            $this->tokens,
-            $this->maxTokenFrequency
-        ], self::STORAGE_ID);
-
-        if (!$id) {
-            throw new \RuntimeException(sprintf('Unable to store extractor data!'));
-        }
-
-        return $id;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function load()
-    {
-        $data = $this->storage->load(self::STORAGE_ID);
-        if (!$data) {
-            throw new \RuntimeException(sprintf('Unable to load extractor data!'));
-        }
-
-        list($this->docCount, $this->tokenDocCount, $this->tokens, $this->maxTokenFrequency) = $data;
-
-        return true;
     }
 }
