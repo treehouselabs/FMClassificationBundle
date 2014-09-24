@@ -4,6 +4,7 @@ namespace FM\ClassificationBundle\Guesser;
 
 use FM\ClassificationBundle\Collection\WeightedCollection;
 use FM\ClassificationBundle\DataSource\DataSourceInterface;
+use FM\ClassificationBundle\DataSource\FilterableDataSourceInterface;
 use FM\ClassificationBundle\Normalizer\NormalizerInterface;
 
 class EqualsGuesser implements GuesserInterface
@@ -54,6 +55,10 @@ class EqualsGuesser implements GuesserInterface
 
         if (null === $value) {
             return $retval;
+        }
+
+        if ($this->dataSource instanceof FilterableDataSourceInterface) {
+            $this->dataSource->filter($value);
         }
 
         foreach ($this->dataSource as $item) {

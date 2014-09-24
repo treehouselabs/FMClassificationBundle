@@ -103,9 +103,11 @@ class WeightedCollection
     /**
      * @param  WeightedCollection $collection
      * @param  int                $weight
+     * @param  bool               $bumpScores when false existing values won't be bumped
+     *
      * @throws \LogicException
      */
-    public function merge(WeightedCollection $collection, $weight = 1)
+    public function merge(WeightedCollection $collection, $weight = 1, $bumpScores = true)
     {
         $all = $this->all();
 
@@ -153,7 +155,7 @@ class WeightedCollection
 
             foreach ($this->collection as $key => list($existingValue, $existingScore)) {
                 // skip score bump for newly merged items
-                if (in_array($existingValue, $collection->all())) {
+                if (in_array($existingValue, $collection->all()) || !$bumpScores) {
                     continue;
                 }
 
@@ -180,6 +182,18 @@ class WeightedCollection
     {
         foreach ($this->collection as $key => list($existingValue, $existingScore)) {
             $this->collection[$key] = [$mapperCallback($existingValue), $existingScore];
+        }
+    }
+
+    /**
+     * @param callable $filterCallback
+     */
+    public function filter($filterCallback)
+    {
+        foreach ($this->collection as $key => list($existingValue, $existingScore)) {
+            if (false === $filterCallback($existingValue, $existingScore)) {
+                unset($this->collection[$key]);
+            }
         }
     }
 

@@ -6,11 +6,12 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 
-class DoctrineQueryBuilderDataSource implements DataSourceInterface
+class DoctrineQueryBuilderDataSource implements DataSourceInterface, FilterableDataSourceInterface
 {
     protected $qb;
     protected $iterator;
     protected $hydrationMode;
+    protected $filterCallback;
 
     /**
      * Constructor.
@@ -24,6 +25,39 @@ class DoctrineQueryBuilderDataSource implements DataSourceInterface
         $this->hydrationMode = $hydrationMode;
     }
 
+    /**
+     * @param callable|null $filterCallback
+     *
+     * @return $this
+     */
+    public function setFilterCallback(\Closure $filterCallback = null)
+    {
+        $this->filterCallback = $filterCallback;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasFilterCallback()
+    {
+        return (null !== $this->filterCallback);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function filter($value)
+    {
+        if (true === $this->hasFilterCallback()) {
+            $this->qb = call_user_func_array($this->filterCallback, [$this->qb, $value]);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function next()
     {
         $this->getInnerIterator()->next();
@@ -35,7 +69,7 @@ class DoctrineQueryBuilderDataSource implements DataSourceInterface
     public function current()
     {
         if (false !== $row = $this->getInnerIterator()->current()) {
-            return $row[0];
+            return current($row);
         }
 
         return null;
@@ -59,6 +93,8 @@ class DoctrineQueryBuilderDataSource implements DataSourceInterface
 
     /**
      * Attention: this will force the query to be executed again
+     *
+     * {@inheritdoc}
      */
     public function rewind()
     {
@@ -67,6 +103,9 @@ class DoctrineQueryBuilderDataSource implements DataSourceInterface
         $this->getInnerIterator()->rewind();
     }
 
+    /**
+     * @return \Doctrine\ORM\Internal\Hydration\IterableResult
+     */
     protected function getInnerIterator()
     {
         if (null === $this->iterator) {
