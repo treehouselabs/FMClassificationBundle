@@ -40,15 +40,15 @@ class WhitespaceNormalizerTest extends \PHPUnit_Framework_TestCase
             ['Hello  world', 'Hello world'],
             [' Hello world', 'Hello world'],
             ['      Hello     world    ', 'Hello world'],
-            ["\n      Hello     \nworld    ", "Hello world"],
-            ["\n      Hello     \nworld    \n\n", "Hello world"],
+            ["\n      Hello     \nworld    ", "Hello\nworld"],
+            ["\n      Hello     \nworld    \n\n", "Hello\nworld"],
             ["Hello&nbsp;world", "Hello world"],
-            ["Hello\r\nworld", "Hello\nworld"],
             ["Hello\xC2\xA0world", "Hello world"],
             [<<<EOF
 Hello&nbsp;world
 EOF
 , "Hello world"],
+            ["Hello\r\nworld", "Hello\nworld"],
         ];
     }
 }
