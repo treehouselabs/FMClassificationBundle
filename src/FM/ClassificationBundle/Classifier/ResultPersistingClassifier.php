@@ -131,11 +131,7 @@ class ResultPersistingClassifier implements TrainableClassifierInterface
             foreach ($classifyResults as $classifyResult) {
                 $classifyResult->setExpected($expected);
 
-                if (null === $expected) {
-                    $classifyResult->setWeight(1);
-                } else {
-                    $classifyResult->incrementWeight();
-                }
+                $classifyResult->incrementWeight();
 
                 $classifyResult->setScore(null);
             }

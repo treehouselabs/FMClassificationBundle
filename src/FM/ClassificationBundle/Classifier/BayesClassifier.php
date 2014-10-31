@@ -43,7 +43,7 @@ class BayesClassifier implements TrainableClassifierInterface
                 $weight = 1;
             }
 
-            for ($w = 0; $w < $weight; $w++) {
+            for ($w = 1; $w <= $weight; $w++) {
                 $this->bayesClassifier->train($label, $title);
             }
         }
