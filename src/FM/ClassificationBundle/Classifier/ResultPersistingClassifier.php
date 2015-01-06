@@ -94,6 +94,10 @@ class ResultPersistingClassifier implements TrainableClassifierInterface
         $classifyResult->setClassifier($this->classifierName);
         $classifyResult->setExpected($expected);
 
+        if (null !== $expected) {
+            $classifyResult->setDatetimeTrained(new \DateTime());
+        }
+
         // if we have an existing record, update it's score, otherwise insert
         if ($existingClassifyResult = $this->doctrine->getRepository('FMClassificationBundle:ClassifyResult')->findOneByHash($classifyResult->getHash())) {
             $existingClassifyResult->setOutput($output);
@@ -134,6 +138,8 @@ class ResultPersistingClassifier implements TrainableClassifierInterface
                 $classifyResult->incrementWeight();
 
                 $classifyResult->setScore(null);
+
+                $classifyResult->setDatetimeTrained(new \DateTime());
             }
 
             $this->doctrine->getManager()->flush($classifyResults);
